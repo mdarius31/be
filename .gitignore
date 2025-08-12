@@ -53,3 +53,8 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# project specific
+be
+build
+/.gdb_history
