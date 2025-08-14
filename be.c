@@ -1,8 +1,9 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+
 
 typedef struct {
  Display*             display;
@@ -18,83 +19,89 @@ typedef struct {
 } State;
 
 void terminate(State* s) {
- if(s == NULL) {
-  return;
- }
  XUnmapWindow(s->display, s->window);
  XDestroyWindow(s->display, s->window);
  XCloseDisplay(s->display);
- free(s->windowName.value);
- free(s);
- s = NULL;
+ free(s); 
 }
 
 State* initiate() {
  char* name = "be";
+
  State* s = malloc(sizeof(State));
- 
- unsigned int xPos, yPos, width, height;
- xPos = 0;
- yPos = 0;
- width = 500;
- height = 500;
+ memset(s, 0, sizeof(State));
+ s->display = XOpenDisplay(0);
+ Window rootWin = XDefaultRootWindow(s->display);
 
- s->display = XOpenDisplay(NULL);
- if(s->display == NULL) {
-  fprintf(stderr, "Terminating early due to failure of opening a connection to X11 server\n");
-  terminate(s);
-  return NULL;
- }
- 
  s->screenNum = DefaultScreen(s->display);
- s->gc = DefaultGC(s->display, s->screenNum);
- 
- s->attrs.background_pixel = XWhitePixel(s->display, s->screenNum);
- s->attrs.border_pixel = XBlackPixel(s->display, s->screenNum);
- s->attrs.event_mask = ButtonPressMask;
- s->valuemask = CWBackPixel | CWBorderPixel | CWEventMask;
+ s->gc = XDefaultGC(s->display, s->screenNum);
 
- Window rootWindow = RootWindow(s->display, s->screenNum);
- int depth = XDefaultDepth(s->display, s->screenNum);
- Visual* visual = XDefaultVisual(s->display, s->screenNum);
+ int wX = 0;
+ int wY = 0;
+ int wWidth = 800;
+ int wHeight = 600;
+ int borderWidth = 0;
+ int wDepth = CopyFromParent;
+ int wClass = CopyFromParent;
  
- s->window = XCreateWindow(s->display, rootWindow, xPos,
- yPos, width, height, 1, depth, InputOutput,
- visual, s->valuemask, &s->attrs);
+ Visual *wVisual = CopyFromParent;
 
- s->size.flags = USPosition | USSize;
- XSetWMNormalHints(s->display, s->window, &s->size);
- 
- XStringListToTextProperty(&name, 1, &s->windowName);
- XSetWMName(s->display, s->window, &s->windowName);
+ int attrValMask = CWBackPixel | CWEventMask;
+ XSetWindowAttributes wAttrs = {}; 
 
- XSelectInput(s->display, s->window, ExposureMask | KeyPressMask);
- 
- s->hints.initial_state = NormalState;
- s->hints.flags = StateHint;
- XSetWMHints(s->display, s->window, &s->hints);
- 
+ wAttrs.background_pixel = 0xffffffff;
+ wAttrs.event_mask = StructureNotifyMask | KeyPressMask 
+                     | KeyReleaseMask | ExposureMask;
 
+ 
+ s->window = XCreateWindow(s->display, rootWin, wX, wY, wWidth,
+                     wHeight, borderWidth, wDepth, wClass,
+                     wVisual, attrValMask, &wAttrs);
+
+ 
  XMapWindow(s->display, s->window);
-  
+ XStoreName(s->display, s->window, name);
+ XFlush(s->display);
+ 
  return s;
 }
 
 int main(void) {
  State* s = initiate();
- char* msg = "Hello, World!";
  
- while(1) {
+ KeySym sym;
+
+ int shift = 0;
+ Bool shouldClose = False;
+ char* str = NULL;
+ unsigned int size = 0;
+ 
+ while(!shouldClose) {
   XNextEvent(s->display, &s->event);
- 
-  if (s->event.type == Expose) {
-   XFillRectangle(s->display, s->window, s->gc, 20, 20, 10, 10);
-   XDrawString(s->display, s->window, s->gc, 50, 50, msg, strlen(msg));
+
+  switch (s->event.type) {
+   case KeyPress:
+    sym = XLookupKeysym(&s->event.xkey, shift);
+    printf("%c\n", (char)sym);
+
+    free(str);
+    size = 2 * sizeof(char);
+    str = malloc(size);
+    sprintf(str, "%c", (char)sym);
+    
+    if(sym == XK_Q || sym == XK_q) shouldClose = True;
+	
+    break;
+   case KeyRelease:
+    break;
   }
- 
-  if (s->event.type == KeyPress) break;
+  
+  XClearWindow(s->display, s->window);
+  
+  XDrawString(s->display, s->window, s->gc, 1, 10, str, size - 1);
  }
- terminate(s);
  
+ free(str); 
+ terminate(s); 
  return 0;
 }
