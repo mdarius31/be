@@ -108,14 +108,15 @@ Content* defaultContent(int width, int height) {
  Content* content = newContent(fg, bg, width, height, &defaultFont);
  content->zoom = 10; 
  
- // testing colors
+ /* testing colors */
  addGraphic(content, newCharGraphic(CHAR, 10, 10, 0, fg, bg, '#'));
  addGraphic(content, newCharGraphic(CHAR, 100, 10, 5, (Pixel){255, 0, 0}, bg, '%'));
  addGraphic(content, newCharGraphic(CHAR, 200, 10, 0, (Pixel){0, 255, 0} , (Pixel){0, 0, 0}, '$'));
 
- // testing characters
+ /* testing characters */
  char* test = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;':\\\",./<>?`~";
  size_t i;
  for(i = 0; i < strlen(test); i++) addGraphic(content, newCharGraphic(CHAR, 10 * (i + 1), 30, 0,  fg, bg, test[i]));
+
  return content;
 }
