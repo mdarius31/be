@@ -1,0 +1,2 @@
+The follwing line should display all the visible ascii characters:
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;':\",./<>?`~

@@ -58,3 +58,4 @@ dkms.conf
 be
 build
 /.gdb_history
+vgcore.*

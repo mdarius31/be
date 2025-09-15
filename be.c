@@ -4,104 +4,74 @@
 #include <string.h>
 #include <stdio.h>
 
-
-typedef struct {
- Display*             display;
- XSetWindowAttributes attrs;
- Window               window;
- XSizeHints           size;
- XWMHints             hints;
- XTextProperty        windowName;
- XEvent               event;
- unsigned long        valuemask;
- int                  screenNum;
- GC                   gc; /* graphics context */
-} State;
-
-void terminate(State* s) {
- XUnmapWindow(s->display, s->window);
- XDestroyWindow(s->display, s->window);
- XCloseDisplay(s->display);
- free(s); 
-}
-
-State* initiate() {
- char* name = "be";
-
- State* s = malloc(sizeof(State));
- memset(s, 0, sizeof(State));
- s->display = XOpenDisplay(0);
- Window rootWin = XDefaultRootWindow(s->display);
-
- s->screenNum = DefaultScreen(s->display);
- s->gc = XDefaultGC(s->display, s->screenNum);
-
- int wX = 0;
- int wY = 0;
- int wWidth = 800;
- int wHeight = 600;
- int borderWidth = 0;
- int wDepth = CopyFromParent;
- int wClass = CopyFromParent;
- 
- Visual *wVisual = CopyFromParent;
-
- int attrValMask = CWBackPixel | CWEventMask;
- XSetWindowAttributes wAttrs = {}; 
-
- wAttrs.background_pixel = 0xffffffff;
- wAttrs.event_mask = StructureNotifyMask | KeyPressMask 
-                     | KeyReleaseMask | ExposureMask;
-
- 
- s->window = XCreateWindow(s->display, rootWin, wX, wY, wWidth,
-                     wHeight, borderWidth, wDepth, wClass,
-                     wVisual, attrValMask, &wAttrs);
-
- 
- XMapWindow(s->display, s->window);
- XStoreName(s->display, s->window, name);
- XFlush(s->display);
- 
- return s;
-}
+#include "config.h"
 
 int main(void) {
- State* s = initiate();
+ /*
+ FileData d1;
+ FileData d2;
+ FileData d3;
  
- KeySym sym;
+ d1 = (FileData){"data", NULL, &d2};
+ d2 = (FileData){"data2", &d1, &d3};
+ d3 = (FileData){"hello there my good man!", &d2, NULL};
 
- int shift = 0;
- Bool shouldClose = False;
- char* str = NULL;
- unsigned int size = 0;
+
+
+
+ FileData* cData = &d1;
+
+ Pixel w = { 0,0,0 };
+ Pixel b = { 255,255,255 };
  
- while(!shouldClose) {
-  XNextEvent(s->display, &s->event);
+ PixelBuffer buf = newPixelBuffer(800, 600);
+ clearPixelBuffer(buf, w);
+ 
+ (void)(b);
+ 
+ runBe();
+ for(int i = 
+ unsigned char i;
+ for(i = 33; i <= 126; i++) 
+  printf("%i %c\n",i, i);
+  */
 
-  switch (s->event.type) {
-   case KeyPress:
-    sym = XLookupKeysym(&s->event.xkey, shift);
-    printf("%c\n", (char)sym);
+ /*
+ runBe();
+ 
 
-    free(str);
-    size = 2 * sizeof(char);
-    str = malloc(size);
-    sprintf(str, "%c", (char)sym);
-    
-    if(sym == XK_Q || sym == XK_q) shouldClose = True;
-	
-    break;
-   case KeyRelease:
-    break;
-  }
-  
-  XClearWindow(s->display, s->window);
-  
-  XDrawString(s->display, s->window, s->gc, 1, 10, str, size - 1);
+ for(i = 33; i <= 37; i++) {
+  printf("%s\n", d.ascii[i]);
  }
+  
+
+ AsciiFont d = defaultFont;
+ int i;
+ int x, y;
+ for(i = 33; i <= 38; i++) {
+  for(y = 0; y < d.height; y++) {
+   for(x = 0; x < d.width; x++) {
+    printf("%c", d.ascii[i][(y * d.width) + x]);
+   }  
+   printf("\n");
+  }
+  printf("\n");
+ }
+  
+ int i, x, y;
+ for(i = 0; i < defaultFont.len; i++) {
+  printf("%i %c\n", defaultFont.ascii[i].code, defaultFont.ascii[i].code);
+  for(y = 0; y < defaultFont.height; y++) {
+   for(x = 0; x < defaultFont.width; x++) {
+    printf("%c", defaultFont.ascii[i].art[(y * defaultFont.width) + x]);
+   }
+   printf("\n");
+  }
+  printf("\n");
+ }
+    */
+
  
- free(str); 
- terminate(s); 
+ runBe();
  return 0;
 }
