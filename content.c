@@ -12,7 +12,7 @@ typedef struct {
  Graphic** entities;
  unsigned int entitiesNum;
  AsciiFont* font;
- int zoom;
+ int scale;
 } Content;
 
 void clearContent(Content* content) {
@@ -29,7 +29,7 @@ Content* newContent(Pixel fg, Pixel bg, int width, int height, AsciiFont* font) 
  res->updateNum = 0;
  res->updateNumAim = 0;
  res->font = font;
- res->zoom = 1;
+ res->scale = 1;
  
  clearContent(res);
 
@@ -74,7 +74,7 @@ void addGraphic(Content* content, Graphic* ent) {
 
 void drawGraphic(Content* content, Graphic* ent) {
  if(ent->type == CHAR) {
-   drawCharPB(content->buf, ent->fg, ent->bg, ent->x, ent->y, ent->val.code, content->font, content->zoom);
+   drawCharPB(content->buf, ent->fg, ent->bg, ent->x, ent->y, ent->val.code, content->font, content->scale);
  }
 }
 
@@ -106,17 +106,37 @@ Content* defaultContent(int width, int height) {
  Pixel bg = (Pixel){38,38,38};
  Pixel fg = (Pixel){133,133,133};
  Content* content = newContent(fg, bg, width, height, &defaultFont);
- content->zoom = 10; 
+ content->scale = 3; 
  
  /* testing colors */
- addGraphic(content, newCharGraphic(CHAR, 10, 10, 0, fg, bg, '#'));
- addGraphic(content, newCharGraphic(CHAR, 100, 10, 5, (Pixel){255, 0, 0}, bg, '%'));
- addGraphic(content, newCharGraphic(CHAR, 200, 10, 0, (Pixel){0, 255, 0} , (Pixel){0, 0, 0}, '$'));
+ addGraphic(content, newCharGraphic(CHAR, 10, 300, 0, fg, bg, '#'));
+ addGraphic(content, newCharGraphic(CHAR, 100, 300, 5, (Pixel){255, 0, 0}, bg, '%'));
+ addGraphic(content, newCharGraphic(CHAR, 200, 300, 0, (Pixel){0, 255, 0} , (Pixel){0, 0, 0}, '$'));
 
  /* testing characters */
- char* test = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;':\\\",./<>?`~";
- size_t i;
- for(i = 0; i < strlen(test); i++) addGraphic(content, newCharGraphic(CHAR, 10 * (i + 1), 30, 0,  fg, bg, test[i]));
+ char* test = "abcdefghijklmnopqrstuvwxyz"
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+              "0123456789!@#$%^&*()_+-=[]"
+              "{}|;':\\\",./<>?`~";
+              
+ size_t i = 0;
+ int x = 0;
+ int y = 0;
+ int gap = 2;
+ int xPosDif = (content->font->width + gap) * content->scale;
+ int yPosDif = (content->font->height + gap) * content->scale;
+ for(i = 0; i < strlen(test); i++) {
 
+  if(i > 0) x += xPosDif;
+  if((i % 26) == 0) {
+   y += yPosDif;
+   x = xPosDif;
+  }
+  
+  addGraphic(content, newCharGraphic(CHAR, x, y, 10,  fg, bg, test[i]));
+ }
+ 
+ addGraphic(content, newCharGraphic(CHAR, 10, 500, 0, fg , bg, 255));
+ 
  return content;
 }
