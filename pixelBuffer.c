@@ -16,6 +16,7 @@ typedef struct {
  int height;
 } PixelBuffer;
 
+
 void drawPixelPB(PixelBuffer* buf, int x, int y, Pixel color) {
  int i = (y * buf->width) + x;
  
@@ -72,7 +73,7 @@ void drawRectPB(PixelBuffer* buf, Pixel color,int rx,int ry, Rect r) {
  }
 }
 
-void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned char code, AsciiFont* font, int zoom) {
+void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned char code, AsciiFont* font, int scale) {
  char* art = font->notFound;
  
  int i;
@@ -85,8 +86,7 @@ void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned cha
 
  int chx, chy, fx, fy;
  Pixel color;
- 
- (void)(zoom);
+
  for(chx = 0; chx < font->width; chx++) {
   for(chy = 0; chy < font->height; chy++) {
    i = (chy*font->width) + chx;
@@ -95,9 +95,15 @@ void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned cha
    
    if(art[i] == '.') color = bg;
    if(art[i] == '#') color = fg;
-   
-   drawPixelPB(buf, fx, fy, color);
 
+   int sx, sy;
+   for (sx = 0; sx < scale; sx++) {
+    for (sy = 0; sy < scale; sy++) {
+     fx = x + (chx * scale) + sx;
+     fy = y + (chy * scale) + sy;
+     drawPixelPB(buf, fx, fy, color);
+    }
+   }
   }
  }
 
