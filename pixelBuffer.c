@@ -8,7 +8,16 @@ typedef struct {
  unsigned char r;
  unsigned char g;
  unsigned char b;
+ unsigned char a;
 } Pixel;
+
+Pixel pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+ return (Pixel){r, g ,b ,a};
+}
+
+Pixel solidPixel(unsigned char r, unsigned char g, unsigned char b) {
+ return (Pixel){r, g, b, 255};
+}
 
 typedef struct {
  Pixel* data;
@@ -16,12 +25,37 @@ typedef struct {
  int height;
 } PixelBuffer;
 
+Pixel blendPixels(Pixel base, Pixel add) {
+ unsigned char whole = 255;
+ 
+ if(add.a == whole)
+   return add;
+ 
+ Pixel res = base;
+ 
+ float addPer = ((float)add.a / whole) * 100;
+ float basePer = 100 - addPer;
+
+ float baseDecimal = (basePer / 100);
+ float addDecimal = (addPer / 100);
+ 
+ res.r = (baseDecimal * base.r) + (addDecimal * add.r);
+ res.g = (baseDecimal * base.g) + (addDecimal * add.g);
+ res.b = (baseDecimal * base.b) + (addDecimal * add.b);
+ res.a = (baseDecimal * base.a) + (addDecimal * add.a);
+        
+ 
+ return res;
+}
 
 void drawPixelPB(PixelBuffer* buf, int x, int y, Pixel color) {
  int i = (y * buf->width) + x;
+
+ bool isWithinHBounds = x >= 0 && x < buf->width;
+ bool isWithinVBounds = y >= 0 && y < buf->height;
  
- if (x >= 0 && x < buf->width && y >= 0 && y < buf->height) {
-   buf->data[i] = color;
+ if (isWithinHBounds && isWithinVBounds) {
+  buf->data[i] = blendPixels(buf->data[i], color); 
  } 
 }
 
@@ -37,7 +71,8 @@ PixelBuffer* freePB(PixelBuffer* buf) {
 PixelBuffer* newPB(int width, int height) {
  PixelBuffer* res = malloc(sizeof(PixelBuffer));
  
- int size = sizeof(Pixel) * width * height;
+ int len = width * height;
+ int size = sizeof(Pixel) * len;
  res->data = malloc(size);
  res->width = width;
  res->height = height;

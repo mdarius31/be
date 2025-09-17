@@ -102,16 +102,16 @@ Content* resizeContent(Content* content, int width, int height) {
  return content;
 }
 
-Content* defaultContent(int width, int height) {
- Pixel bg = (Pixel){38,38,38};
- Pixel fg = (Pixel){133,133,133};
+Content* testContent(int width, int height) {
+ Pixel bg = solidPixel(38,38,38);
+ Pixel fg = solidPixel(133,133,133);
  Content* content = newContent(fg, bg, width, height, &defaultFont);
- content->scale = 3; 
+ content->scale = 3;
  
  /* testing colors */
  addGraphic(content, newCharGraphic(CHAR, 10, 300, 0, fg, bg, '#'));
- addGraphic(content, newCharGraphic(CHAR, 100, 300, 5, (Pixel){255, 0, 0}, bg, '%'));
- addGraphic(content, newCharGraphic(CHAR, 200, 300, 0, (Pixel){0, 255, 0} , (Pixel){0, 0, 0}, '$'));
+ addGraphic(content, newCharGraphic(CHAR, 100, 300, 5, solidPixel(255, 0, 0), bg, '%'));
+ addGraphic(content, newCharGraphic(CHAR, 200, 300, 0, pixel(0, 255, 0, 20) , pixel(0, 0, 0, 0), '$'));
 
  /* testing characters */
  char* test = "abcdefghijklmnopqrstuvwxyz"
@@ -138,5 +138,15 @@ Content* defaultContent(int width, int height) {
  
  addGraphic(content, newCharGraphic(CHAR, 10, 500, 0, fg , bg, 255));
  
+ return content;
+}
+
+Content* defaultContent(int width, int height) {
+ Pixel bg = solidPixel(38,38,38);
+ Pixel fg = solidPixel(133,133,133);
+
+ Content* content = newContent(fg, bg, width, height, &defaultFont);
+ content->scale = 2;
+
  return content;
 }
