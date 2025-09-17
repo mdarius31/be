@@ -109,9 +109,10 @@ Content* testContent(int width, int height) {
  content->scale = 2.1;
  
  /* testing colors */
- addGraphic(content, newCharGraphic(CHAR, 10, 300, 0, fg, bg, '#'));
- addGraphic(content, newCharGraphic(CHAR, 100, 300, 5, solidPixel(255, 0, 0), bg, '%'));
- addGraphic(content, newCharGraphic(CHAR, 200, 300, 0, pixel(0, 255, 0, 20) , pixel(0, 0, 0, 0), '$'));
+ addGraphic(content, newCharGraphic(10, 300, 0, fg, bg, '#'));
+ addGraphic(content, newCharGraphic(100, 300, 5, solidPixel(255, 0, 0), bg, '%'));
+ addGraphic(content, newCharGraphic(200, 300, 0, pixel(0, 255, 0, 100), pixel(0, 0, 0, 0), '$'));
+ addGraphic(content, newCharGraphic(300, 300, 0, fg, bg, '$'));
 
  /* testing characters */
  char* test = "abcdefghijklmnopqrstuvwxyz"
@@ -133,10 +134,10 @@ Content* testContent(int width, int height) {
    x = xPosDif;
   }
   
-  addGraphic(content, newCharGraphic(CHAR, x, y, 10,  fg, bg, test[i]));
+  addGraphic(content, newCharGraphic(x, y, 10,  fg, bg, test[i]));
  }
  
- addGraphic(content, newCharGraphic(CHAR, 10, 500, 0, fg , bg, 255));
+ addGraphic(content, newCharGraphic(10, 500, 0, fg , bg, 255));
  
  return content;
 }

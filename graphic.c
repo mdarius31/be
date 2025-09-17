@@ -41,8 +41,8 @@ Graphic* newGraphic(GraphicType type, int x, int y, int zIndex, Pixel fg, Pixel 
  return res;
 }
 
-Graphic* newCharGraphic(GraphicType type, int x, int y, int zIndex, Pixel fg, Pixel bg, unsigned char code) {
- Graphic* res = newGraphic(type, x, y, zIndex, fg, bg);
+Graphic* newCharGraphic(int x, int y, int zIndex, Pixel fg, Pixel bg, unsigned char code) {
+ Graphic* res = newGraphic(CHAR, x, y, zIndex, fg, bg);
 
  res->val.code = code;
 
