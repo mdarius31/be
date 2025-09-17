@@ -9,7 +9,7 @@
 
 #define isSourceNewerC(dep) isSourceNewer("./src/" dep ".c", "./build/" dep ".o") || isSourceNewer("./include/" dep ".h", "./build/" dep ".o")
 
-#define basicBuildCmd(dep) "cc -c ./src/" dep ".c -o ./build" dep ".o"
+#define basicBuildCmd(dep) "cc -c ./src/" dep ".c -o ./build/" dep ".o"
 #define basicBuild(dep) build(basicBuildCmd(dep))
 
 void build(char* cmd) {
