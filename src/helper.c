@@ -22,3 +22,20 @@ bool isSourceNewer(char* source, char* result) {
  return sourceStat.st_mtime > resultStat.st_mtime;
 #endif
 }
+
+bool exists(char* name) {
+#ifdef _WIN32
+ WIN32_FILE_ATTRIBUTE_DATA nameInfo;
+
+ if (!GetFileAttributesEx(name, GetFileExInfoStandard, &nameInfo)) {
+  return false;
+ }
+#else
+ struct stat nameStat;
+ 
+ if(stat(name, &nameStat) != 0) {
+  return false;
+ }
+#endif
+ return true;
+}

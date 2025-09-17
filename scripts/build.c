@@ -50,10 +50,16 @@ bool buildUniversalDeps() {
 
 int main(void) {
  if(isSourceNewer("./scripts/build.c", "./scripts/build")) {
-  printf("Rebuilding the build system\n");
+  printf("Rebuilding the build script\n");
   build("cc ./scripts/build.c -o ./scripts/build");
+  printf("Executing new build script\n");
   system("./scripts/build");
   return 0;
+ }
+
+ if(!exists("./build")) {
+  printf("\"build\" directory dosent exists, attempting to create it\n");
+  system("mkdir build");
  }
 
  bool depsRebuilt = buildUniversalDeps();
@@ -72,6 +78,9 @@ int main(void) {
 
  if(depsRebuilt) {
   build(cmd);
+  printf("Finished!\n");
+ } else {
+  printf("All is up to date!\n");
  }
  
  return 0;

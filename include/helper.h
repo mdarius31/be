@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 bool isSourceNewer(char* source, char* result);
+bool exists(char* name);
 
 /* BE_HELPER_H */
 #endif
