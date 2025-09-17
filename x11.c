@@ -125,7 +125,7 @@ XImage* content2XImage(WinState* s, Content* content) {
 
 void runBe() {
  
- Content* content = defaultContent(INIT_WIDTH, INIT_HEIGHT);
+ Content* content = testContent(INIT_WIDTH, INIT_HEIGHT);
 
   renderContent(content);
 
