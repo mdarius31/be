@@ -12,7 +12,7 @@ typedef struct {
  Graphic** entities;
  unsigned int entitiesNum;
  AsciiFont* font;
- int scale;
+ float scale;
 } Content;
 
 void clearContent(Content* content) {
@@ -106,7 +106,7 @@ Content* testContent(int width, int height) {
  Pixel bg = solidPixel(38,38,38);
  Pixel fg = solidPixel(133,133,133);
  Content* content = newContent(fg, bg, width, height, &defaultFont);
- content->scale = 3;
+ content->scale = 2.1;
  
  /* testing colors */
  addGraphic(content, newCharGraphic(CHAR, 10, 300, 0, fg, bg, '#'));
@@ -120,11 +120,11 @@ Content* testContent(int width, int height) {
               "{}|;':\\\",./<>?`~";
               
  size_t i = 0;
- int x = 0;
- int y = 0;
+ float x = 0;
+ float y = 0;
  int gap = 2;
- int xPosDif = (content->font->width + gap) * content->scale;
- int yPosDif = (content->font->height + gap) * content->scale;
+ float xPosDif = (content->font->width + gap) * content->scale;
+ float yPosDif = (content->font->height + gap) * content->scale;
  for(i = 0; i < strlen(test); i++) {
 
   if(i > 0) x += xPosDif;

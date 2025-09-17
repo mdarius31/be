@@ -108,7 +108,7 @@ void drawRectPB(PixelBuffer* buf, Pixel color,int rx,int ry, Rect r) {
  }
 }
 
-void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned char code, AsciiFont* font, int scale) {
+void drawCharPB(PixelBuffer* buf, Pixel fg, Pixel bg, int x, int y, unsigned char code, AsciiFont* font, float scale) {
  char* art = font->notFound;
  
  int i;
