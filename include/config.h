@@ -1,3 +1,6 @@
+#ifndef BE_CONFIG_H
+#define BE_CONFIG_H
+
 #define BE_TARGET x11
 #define BE_DEBUG
 
@@ -9,4 +12,8 @@
   #include "../src/gtk.c"
  #endif
 
-#endif 
+/* BE_BUILD_SCRIPT */
+#endif
+
+/* BE_CONFIG_H */
+#endif

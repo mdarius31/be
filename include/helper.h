@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 
-bool older(const char *file1, const char *file2);
+bool isSourceNewer(char* source, char* result);
 
 /* BE_HELPER_H */
 #endif
