@@ -1,15 +1,4 @@
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdio.h>
-
-#include "font.c"
-
-typedef struct { 
- unsigned char r;
- unsigned char g;
- unsigned char b;
- unsigned char a;
-} Pixel;
+#include "../include/pixelBuffer.h"
 
 Pixel pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
  return (Pixel){r, g ,b ,a};
@@ -18,12 +7,6 @@ Pixel pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a) 
 Pixel solidPixel(unsigned char r, unsigned char g, unsigned char b) {
  return (Pixel){r, g, b, 255};
 }
-
-typedef struct {
- Pixel* data;
- int width;
- int height;
-} PixelBuffer;
 
 Pixel blendPixels(Pixel base, Pixel add) {
  unsigned char whole = 255;
@@ -90,10 +73,6 @@ void clearPB(PixelBuffer* buf, Pixel color) {
   }
  }
 }
-
-typedef struct {
- int w, h;
-} Rect;
 
 void drawRectPB(PixelBuffer* buf, Pixel color,int rx,int ry, Rect r) {
  int x, y;

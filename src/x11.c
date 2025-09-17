@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "content.c"
+#include "../include/content.h"
 #define INIT_WIDTH 800
 #define INIT_HEIGHT 600
 

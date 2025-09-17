@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-
-#include "graphic.c"
-typedef struct {
- unsigned int updateNum;
- unsigned int updateNumAim;
- 
- Pixel fg, bg;
- PixelBuffer* buf;
-
- Graphic** entities;
- unsigned int entitiesNum;
- AsciiFont* font;
- float scale;
-} Content;
+#include "../include/content.h"
 
 void clearContent(Content* content) {
  clearPB(content->buf, content->bg);

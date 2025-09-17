@@ -1,10 +1,4 @@
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include "config.h"
+#include "../include/config.h"
 
 int main(void) {
  /*

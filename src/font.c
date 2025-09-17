@@ -1,20 +1,4 @@
-#include <stddef.h>
-#include <stdbool.h>
-
-typedef struct {
- unsigned char code;
- char* art;
-} Ascii;
-
-typedef struct {
- Ascii ascii[256];
- int len;
- int width;
- int height;
- char* notFound;
-} AsciiFont;
-
-
+#include "../include/font.h"
 
 AsciiFont defaultFont = {
  width: 8,
@@ -142,25 +126,25 @@ AsciiFont defaultFont = {
    /* * */
    42,
    "........"
-   "#..##..#"
-   ".#.##.#."
-   "..####.."
-   "########"
-   "..####.."
-   ".#.##.#."
-   "#..##..#"
+   "#..#..#."
+   ".#.#.#.."
+   "..###..."
+   "#######."
+   "..###..."
+   ".#.#.#.."
+   "#..#..#."
   }, 
   {
    /* + */
    43,
    "........"
-   "........"
-   "...##..."
-   "...##..."
-   "########"
-   "########"
-   "...##..."
-   "...##..."
+   "...#...."
+   "...#...."
+   "...#...."
+   "#######."
+   "...#...."
+   "...#...."
+   "...#...."
   }, 
   {
    /* , */
