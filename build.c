@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "helper.c"
 
 #define BUILD_SCRIPT
