@@ -7,62 +7,76 @@
 #include "../include/config.h"
 
 
-#define isSourceNewerC(dep) isSourceNewer("./src/" dep ".c", "./build/" dep ".o") || isSourceNewer("./include/" dep ".h", "./build/" dep ".o")
+#define shouldBuildObj(dep) \
+ isSourceNewer("./src/" dep ".c", "./build/" dep ".o") ||\
+ isSourceNewer("./include/" dep ".h", "./build/" dep ".o")
 
-#define basicBuildCmd(dep) "cc -c ./src/" dep ".c -o ./build/" dep ".o"
-#define basicBuild(dep) build(basicBuildCmd(dep))
+#define buildObj(dep) build("cc -c ./src/" dep ".c -o ./build/" dep ".o")
 
-void build(char* cmd) {
+
+#define tryBuildObj(dep) \
+ if(shouldBuildObj(dep)) {\
+  res.tried = true;\
+  printf("Trying to build %s\n", dep);\
+  res.good = buildObj(dep) == 0;\
+  if(!res.good) {\
+   printf("Failed to build %s\n\n", dep);\
+   return res;\
+  }\
+  printf("Built %s\n\n", dep);\
+ }\
+
+int build(char* cmd) {
  printf("%s\n", cmd);
- system(cmd);
+ return system(cmd);
 }
 
-bool buildUniversalDeps() {
- bool built = false;
- 
- if(isSourceNewerC("font")) {
-  basicBuild("font");
-  built = true;
- }
- 
- if(isSourceNewerC("pixelBuffer")) {
-  basicBuild("pixelBuffer");
-  built = true;
- }
- 
- if(isSourceNewerC("graphic")) {
-  basicBuild("graphic");
-  built = true;
+typedef struct {
+ bool tried;
+ bool good;
+} BuildResult;
+
+BuildResult buildDeps() {
+ BuildResult res = {false, false};
+
+ tryBuildObj("font");
+ tryBuildObj("pixelBuffer");
+ tryBuildObj("graphic");
+ tryBuildObj("content");
+
+ if(res.tried && res.good && isSourceNewer("./src/be.c", "./build/be")) {
+  res.good = build("cc -c ./src/be.c -o ./build/be.o") == 0;
  }
 
- if(isSourceNewerC("content")) {
-  basicBuild("content");
-  built = true;
- }
-
- if(isSourceNewer("./src/be.c", "./build/be")) {
-  build("cc -c ./src/be.c -o ./build/be.o");
-  built = true;
- }
- 
- return built;
+ return res;
 }
 
 int main(void) {
  if(isSourceNewer("./scripts/build.c", "./scripts/build")) {
   printf("Rebuilding the build script\n");
-  build("cc ./scripts/build.c -o ./scripts/build");
-  printf("Executing new build script\n");
-  system("./scripts/build");
+
+  if(build("cc ./scripts/build.c -o ./scripts/build") == 0) {
+   printf("Executing new build script\n");
+   system("./scripts/build");
+  
+  } else {
+   printf("Failed to rebuild the build script");
+   return -1;
+  }
+
   return 0;
  }
 
  if(!exists("./build")) {
-  printf("\"build\" directory dosent exists, attempting to create it\n");
+  printf("\"build\" directory dosent exists, attempting to create it\n\n");
   system("mkdir build");
+  if(!exists("./build")) {
+   printf("Failed to create \"build\" directory, please create it by hand and rerun\n");
+   return -1;
+  }
  }
 
- bool depsRebuilt = buildUniversalDeps();
+ BuildResult depsRes = buildDeps();
  
  #ifdef BE_DEBUG
   char* cmd = "cc ./build/*.o -g -Wextra -Wall -Werror --std=c89 -ansi -o ./build/be -lX11";
@@ -76,12 +90,14 @@ int main(void) {
 
  #endif
 
- if(depsRebuilt) {
-  build(cmd);
+ bool finalRes = depsRes.tried ? depsRes.good : true;
+
+ if(depsRes.tried && depsRes.good) {
+  finalRes = build(cmd) == 0;
   printf("Finished!\n");
- } else {
-  printf("All is up to date!\n");
+ } else if(depsRes.tried) {
+  printf("An error occured\n");
  }
  
- return 0;
+ return finalRes ? 0 : -1;
 }
