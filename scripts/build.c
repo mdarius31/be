@@ -97,6 +97,8 @@ int main(void) {
   printf("Finished!\n");
  } else if(depsRes.tried) {
   printf("An error occured\n");
+ } else {
+  printf("All up to date!\n");
  }
  
  return finalRes ? 0 : -1;
